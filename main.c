@@ -7,12 +7,12 @@ typedef struct
 {
     char data[100];
     struct node *left, *right;
-}node;
+} node;
 
 node *newNode(char word[100])
 {
     node *n = malloc(sizeof(node));
-    strcpy(n->data,word);//n->data = word;
+    strcpy(n->data,word);
     n->left = n->right = NULL;
     return n;
 }
@@ -31,25 +31,29 @@ node *insert(node *root, char x[100])
         else if(strcasecmp(root->data,x) < 0)
             root->right = insert(root->right, x);
     }
-    return root; //eh lazmetha?
+    return root;
 }
 
-void display_inorder(node* root)
+void displayTree(node* root)
 {
     if(root)
     {
-        display_inorder(root->left);
+        displayTree(root->left);
         printf("%s  ",root->data);
-        display_inorder(root->right);
+        displayTree(root->right);
     }
 }
 
-long height(node* root) {
-    if (root == NULL) {
+int getHeight(node* root)
+{
+    if (root == NULL)
+    {
         return -1;
-    } else {
-        int left_height = height(root->left);
-        int right_height = height(root->right);
+    }
+    else
+    {
+        int left_height = getHeight(root->left);
+        int right_height = getHeight(root->right);
         return 1+(left_height > right_height ? left_height : right_height);
     }
 }
@@ -77,26 +81,28 @@ int main()
     node *root=NULL;
     FILE *f;
     f = fopen("EN-US-Dictionary.txt","r");
-    if(f!=NULL)
+
+    if(f)
     {
         while(!feof(f))
         {
-    char word[100];
-    fscanf(f,"%s",word);
-    root = insert(root,word);
-    nodes_num++;
-    //printf("%s  ",word);
+            char word[100];
+            fscanf(f,"%s",word);
+            root = insert(root,word);
+            nodes_num++;
+            //printf("%s  ",word);
         }
-        printf("Dictionary loaded successfully!\n");
-    fclose(f);
+        printf(" Dictionary loaded successfully!\n\n");
+        fclose(f);
     }
     else
         printf("FILE NOT FOUND.");
-        printf("number of nodes = %d\n",nodes_num);
-        printf("number of levels = %d\n",height(root));
-    //display_inorder(root);
+    printf(" Size (nodes) = %d\n",nodes_num);
+    printf(" Height (levels) = %d\n",getHeight(root));
+    printf("-------------------------------------");
 
-    printf("\nword = %s",search(root,"torpedo")->data);
+    //displayTree(root);
+    //printf("\nword = %s",search(root,"torpedo")->data);
 
 
     return 0;
