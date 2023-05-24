@@ -75,20 +75,20 @@ node *search(node *root, char value[100])
 
 node* getSuggestions(node *root, char *str)
 {
+node *lastNode = NULL;
+node *currentNode = root;
 
-    if(root)
-    {
-        if((strcasecmp(root->left->data,str) > 0)&&(strcasecmp(root->right->data,str) > 0))
-            return root;
-        else if((strcasecmp(root->left->data,str) < 0)&&(strcasecmp(root->right->data,str) < 0))
-            return root;
-        else if(strcasecmp(root->data,str) > 0)
-            return getSuggestions(root->left, str);
-        else
-            return getSuggestions(root->right, str);
-    }
+while(currentNode!=NULL && strcasecmp(str,currentNode->data)!=0)
+{
+    lastNode = currentNode;
+
+    if(strcasecmp(str, currentNode->data) < 0)
+        currentNode = currentNode->left;
     else
-        return NULL;
+        currentNode = currentNode->right;
+}
+if(lastNode!= NULL)
+    return lastNode;
 }
 
 void wordCheck(node *root,char *str)
@@ -132,7 +132,7 @@ int main()
     printf("-------------------------------------\n");
 
     displayTree(root);
-    wordCheck(root,"wrot");
+    wordCheck(root,"assignmet");
     //printf("\nword = %s",search(root,"torpedo")->data);
 
 
