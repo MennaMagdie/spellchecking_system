@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h>
 
-typedef struct
+typedef struct node
 {
     char data[100];
     struct node *left, *right;
@@ -73,7 +73,37 @@ node *search(node *root, char value[100])
         return NULL;
 }
 
+node* getSuggestions(node *root, char *str)
+{
 
+    if(root)
+    {
+        if((strcasecmp(root->left->data,str) > 0)&&(strcasecmp(root->right->data,str) > 0))
+            return root;
+        else if((strcasecmp(root->left->data,str) < 0)&&(strcasecmp(root->right->data,str) < 0))
+            return root;
+        else if(strcasecmp(root->data,str) > 0)
+            return getSuggestions(root->left, str);
+        else
+            return getSuggestions(root->right, str);
+    }
+    else
+        return NULL;
+}
+
+void wordCheck(node *root,char *str)
+{
+    node *n = search(root,str);
+    if(strcasecmp(n->data,str) == 0)
+        printf("%s - CORRECT\n",str);
+    else
+    {
+        n = getSuggestions(root,str);
+        printf("INCORRECT WORD\n");
+        printf("Suggestion: %s",n->data);
+        //       inorderPredecessor(root,n), inorderSuccessor(root,n));
+    }
+}
 
 int main()
 {
@@ -99,9 +129,10 @@ int main()
         printf("FILE NOT FOUND.");
     printf(" Size (nodes) = %d\n",nodes_num);
     printf(" Height (levels) = %d\n",getHeight(root));
-    printf("-------------------------------------");
+    printf("-------------------------------------\n");
 
-    //displayTree(root);
+    displayTree(root);
+    wordCheck(root,"wrot");
     //printf("\nword = %s",search(root,"torpedo")->data);
 
 
